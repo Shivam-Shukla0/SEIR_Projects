@@ -9,17 +9,14 @@ def scrape_page(website_link):
     if not website_link.startswith("http") and not website_link.startswith("https"):
         website_link = "https://" + website_link
 
-    options = Options()
-    options.add_argument("--headless")
-    options.add_argument("--no-sandbox")
-
-    driver = webdriver.Chrome(options=options)
+    op = Options()
+    op.add_argument("--headless")
+    op.add_argument("--no-sandbox")
+    driver = webdriver.Chrome(options=op)
     driver.get(website_link)
-
     time.sleep(3)
     html = driver.page_source
     driver.quit()
-
     filter_html_page = BeautifulSoup(html, "html.parser")
 
     if filter_html_page.title and filter_html_page.title.string:
@@ -34,8 +31,8 @@ def scrape_page(website_link):
 
     body_tag_content = filter_html_page.find("body")
     if body_tag_content:
-        text = body_tag_content.get_text(separator="\n")
-        lines = text.split("\n")
+        text_data = body_tag_content.get_text(separator="\n")
+        lines = text_data.split("\n")
         i = 0
         while i < len(lines):
             cleaned_content = lines[i].strip()
@@ -48,7 +45,6 @@ def scrape_page(website_link):
     while i < len(links):
         print(urljoin(website_link, links[i]["href"]))
         i += 1
-
 
 if __name__ == "__main__":
     if len(sys.argv) == 2:
